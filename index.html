@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Passport Photo Editor</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .tool-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #preview {
+            max-width: 100%;
+            border: 2px dashed #ccc;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tool-container">
+        <h2>Passport Photo Editor</h2>
+
+        <!-- Step 1: Upload Section -->
+        <div>
+            <h3>1. Upload Photo</h3>
+            <input type="file" id="uploader" accept="image/*">
+            <p>Format: JPEG/PNG | Clear face visibility required</p>
+        </div>
+
+        <!-- Step 2: Editing Tools -->
+        <div>
+            <h3>2. Edit Photo</h3>
+            <button class="btn" onclick="removeBackground()">Remove Background</button>
+            <button class="btn" onclick="setBgColor('#ffffff')">White Background</button>
+            <button class="btn" onclick="cropPhoto()">Crop to 35x35mm</button>
+        </div>
+
+        <!-- Step 3: Preview -->
+        <div>
+            <h3>3. Preview</h3>
+            <canvas id="preview"></canvas>
+        </div>
+
+        <!-- Step 4: Download -->
+        <div>
+            <h3>4. Save & Print</h3>
+            <button class="btn" onclick="downloadPhoto()">Download PNG</button>
+            <p>Ensure 300 DPI for printing</p>
+        </div>
+    </div>
+
+    <script>
+        // Core functionality
+        const canvas = document.getElementById('preview');
+        const ctx = canvas.getContext('2d');
+
+        // Image upload handler
+        document.getElementById('uploader').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // Background removal function (Basic implementation)
+        function removeBackground() {
+            // Integrate AI API here (e.g., Remove.bg)
+            alert('AI background removal requires API integration');
+        }
+
+        // Set background color
+        function setBgColor(color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Download functionality
+        function downloadPhoto() {
+            const link = document.createElement('a');
+            link.download = 'passport-photo.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>
